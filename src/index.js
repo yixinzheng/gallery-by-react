@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ReactRouter from 'react-router';
 require('./style.css');
 
 //获取图片相关的数据
@@ -45,8 +44,8 @@ var ImgFigure = React.createClass({
         }
         //如果图片的旋转角度有值切不为0，添加旋转角度
         if (this.props.arrange.rotate) {
-            (['-moz-','-ms-','-webkit-','']).forEach(function (value) {
-                styleObj[value+'transform'] = 'rotate('+this.props.arrange.rotate+'deg)';
+            (['MozTransform','msTransform','WebkitTransform','transform']).forEach(function (value) {
+                styleObj[value] = 'rotate('+this.props.arrange.rotate+'deg)';
             }.bind(this));
         }
 
@@ -69,7 +68,35 @@ var ImgFigure = React.createClass({
             </figure>
         );
     }
-})
+});
+
+//控制组件
+var ControllerUnit = React.createClass({
+    handleClick: function (e) {
+        //如果点击的是当前正在选中态的按钮，则翻转图片，否则将对应图片居中
+        if(this.props.arrange.isCenter){
+            this.props.inverse();
+        }else{
+            this.props.center();
+        }
+        e.preventDefault();
+        e.stopPropagation();
+    },
+   render: function(){
+        var controllerUnitClassName = "controller-unit";
+       //如果对应的是居中的图片，显示控制按钮的居中态
+       if(this.props.arrange.isCenter){
+           controllerUnitClassName += " is-center";
+           //如果同时对应的是翻转图片，显示控制按钮的翻转态
+           if(this.props.arrange.isInverse){
+               controllerUnitClassName += " is-inverse";
+           }
+       }
+        return(
+            <span className={controllerUnitClassName} onClick={this.handleClick}></span>
+        );
+   }
+});
 
 var Comp = React.createClass({
     Constant: {
@@ -119,7 +146,7 @@ var Comp = React.createClass({
             vPosRangeTopY = vPosRange.topY,
             vPosRangeX = vPosRange.x,
             imgsArrangeTopArr = [],
-            topImgNum = Math.ceil(Math.random() * 2),//取0个或者1个
+            topImgNum = Math.floor(Math.random() * 2),//取0个或者1个
             topImgSpliceIndex = 0,
             imgsArrangeCenterArr = imgsArrangeArr.splice(centerIndex, 1);
 
@@ -242,8 +269,10 @@ var Comp = React.createClass({
                     isCenter: false
                 };
             }
-            imgFigures.push(<ImgFigure key={'imgFigure' + index} data={value} ref={'imgFigure' + index}
+            imgFigures.push(<ImgFigure key={index} data={value} ref={'imgFigure' + index}
              arrange={this.state.imgsArrangeArr[index]} inverse={this.inverse(index)} center={this.center(index)}/>)
+            controllerUnits.push(<ControllerUnit key={index} arrange={this.state.imgsArrangeArr[index]}
+             inverse={this.inverse(index)} center={this.center(index)}/>);
         }.bind(this));
 
         return (

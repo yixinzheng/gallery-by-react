@@ -20,7 +20,7 @@ module.exports = {
                 loader : "json-loader"
             },
             {
-                test : /\.(png|jpg)$/,
+                test : /\.(png|jpg|svg|eot|ttf|woff|woff2)$/,
                 loader : "url-loader"
             }
         ],
