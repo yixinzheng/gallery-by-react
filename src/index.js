@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 require('./style.css');
 
-//获取图片相关的数据 更新
+//获取图片相关的数据 更新代码
 var imageDatas = require('./imageDatas.json');
 
 //利用自执行函数 ，将图片名信息转成图片URL路径信息
