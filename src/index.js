@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 require('./style.css');
 
+//我就加个注释测试
 //获取图片相关的数据
 var imageDatas = require('./imageDatas.json');
 
